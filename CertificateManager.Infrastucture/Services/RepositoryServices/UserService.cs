@@ -151,8 +151,15 @@ public class UserService : IUserService
         var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId)
                    ?? throw new NotFoundException($"User not found! userId:  {userId}");
 
-        _dbContext.Users.Remove(user);
-        await _dbContext.SaveChangesAsync();
+        if (user.UserRole != EUserRoles.Admin)
+        {
+            _dbContext.Users.Remove(user);
+            await _dbContext.SaveChangesAsync();
+        }
+        else
+        {
+            throw new BadRequestException("The administrator cannot be deleted!");
+        }
     }
 
 }

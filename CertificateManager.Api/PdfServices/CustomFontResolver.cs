@@ -1,12 +1,16 @@
 ﻿using PdfSharp.Fonts;
 
-namespace CertificateManager.Api;
+namespace CertificateManager.Api.PdfServices;
 
 public class CustomFontResolver : IFontResolver
 {
     public byte[] GetFont(string faceName)
     {
-        var fontFilePath = "arial.ttf";
+        // When you run without Docker
+        // var fontFilePath = "PdfServices/arial.ttf";
+
+        // When you work with Docker
+        var fontFilePath = "/app/PdfServices/arial.ttf";
 
         if (File.Exists(fontFilePath))
         {
