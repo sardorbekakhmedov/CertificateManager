@@ -1,0 +1,36 @@
+version: '3.8' 
+
+services:
+  certificate_manager:
+    image: certificate_manager
+    container_name: certificate_manager
+    depends_on:
+      - certificate_db
+    build:
+      context: .
+      dockerfile: Dockerfile.CertificateManager
+    ports:
+      - '7070:80'
+    networks:
+      - certificate_network
+
+  certificate_db:
+    image: postgres:latest
+    container_name: certificate_db
+    environment:
+      - POSTGRES_PASSWORD=certificate_password
+      - POSTGRES_USER=certificate_username
+      - POSTGRES_DB=certificate_database
+    ports:
+      - "5433:5432"
+    restart: always
+    volumes:
+      - certificate_db_data:/var/lib/postgresql/data/
+    networks:
+      - certificate_network
+
+volumes: 
+  certificate_db_data:
+
+networks:
+  certificate_network:

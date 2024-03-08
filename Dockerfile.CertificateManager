@@ -1,0 +1,31 @@
+#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+ENV ASPNETCORE_HTTP_PORTS=80
+USER app
+WORKDIR /app
+ENV ASPNETCORE_ENVIRONMENT=Development
+EXPOSE 8080
+EXPOSE 8081
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ENV ASPNETCORE_HTTP_PORTS=80
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["CertificateManager.Api/CertificateManager.Api.csproj", "CertificateManager.Api/"]
+COPY ["CertificateManager.Application/CertificateManager.Application.csproj", "CertificateManager.Application/"]
+COPY ["CertificateManager.Domain/CertificateManager.Domain.csproj", "CertificateManager.Domain/"]
+COPY ["CertificateManager.Infrastucture/CertificateManager.Infrastructure.csproj", "CertificateManager.Infrastucture/"]
+RUN dotnet restore "./CertificateManager.Api/CertificateManager.Api.csproj"
+COPY . .
+WORKDIR "/src/CertificateManager.Api"
+RUN dotnet build "./CertificateManager.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./CertificateManager.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "CertificateManager.Api.dll"]
