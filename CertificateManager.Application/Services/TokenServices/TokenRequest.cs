@@ -1,4 +1,4 @@
-﻿namespace Certificate.Application.Services.TokenServices;
+﻿namespace CertificateManager.Application.Services.TokenServices;
 
 public class TokenRequest
 {

@@ -1,9 +1,9 @@
-﻿using Certificate.Infrastructure.Persistence;
-using Microsoft.AspNetCore.Hosting.Server;
+﻿using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using Certificate.Application.Abstractions.Interfaces;
+using CertificateManager.Application.Abstractions.Interfaces;
+using CertificateManager.Infrastructure.Persistence;
 
 namespace CertificateManager.Api.Extensions;
 

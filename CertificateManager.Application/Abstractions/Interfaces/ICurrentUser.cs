@@ -1,4 +1,4 @@
-﻿namespace Certificate.Application.Abstractions.Interfaces;
+﻿namespace CertificateManager.Application.Abstractions.Interfaces;
 
 public interface ICurrentUser
 {

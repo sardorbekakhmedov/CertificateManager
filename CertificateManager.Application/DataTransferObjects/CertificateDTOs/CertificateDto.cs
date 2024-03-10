@@ -1,4 +1,4 @@
-﻿namespace Certificate.Application.DataTransferObjects.CertificateDTOs;
+﻿namespace CertificateManager.Application.DataTransferObjects.CertificateDTOs;
 
 public class CertificateDto
 {

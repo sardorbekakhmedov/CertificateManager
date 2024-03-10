@@ -1,6 +1,7 @@
-﻿using CertificateManager.Domain.Enums;
+﻿using CertificateManager.Application.DataTransferObjects.CertificateDTOs;
+using CertificateManager.Domain.Enums;
 
-namespace Certificate.Application.DataTransferObjects.UserDTOs;
+namespace CertificateManager.Application.DataTransferObjects.UserDTOs;
 
 public class UserDto
 {
@@ -14,5 +15,5 @@ public class UserDto
     public DateTime CreatedDate { get; set; }
     public Guid? LastModifiedById { get; set; }
     public DateTime? LastModifiedDate { get; set; }
-    public virtual CertificateManager.Domain.Entities.Certificate? Certificate { get; set; }
+    public virtual CertificateDto? Certificate { get; set; }
 }

@@ -1,6 +1,4 @@
-﻿using CertificateManager.Domain.Enums;
-
-namespace Certificate.Application.SortFilters.FilterEntities;
+﻿namespace CertificateManager.Application.SortFilters.FilterEntities;
 
 public class CertificateFiler
 {

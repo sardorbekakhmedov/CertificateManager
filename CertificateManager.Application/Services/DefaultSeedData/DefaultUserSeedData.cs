@@ -1,10 +1,10 @@
-﻿using Certificate.Application.Abstractions.Interfaces;
+﻿using CertificateManager.Application.Abstractions.Interfaces;
 using CertificateManager.Domain.Entities;
 using CertificateManager.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Certificate.Application.Services.DefaultSeedData;
+namespace CertificateManager.Application.Services.DefaultSeedData;
 
 public class DefaultUserSeedData : IDefaultUserSeedData
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
 
-namespace Certificate.Application.Exceptions;
+namespace CertificateManager.Application.Exceptions;
 
 [DefaultStatusCode(404)]
 public class NotFoundException : Exception

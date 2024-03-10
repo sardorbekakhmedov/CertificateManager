@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Certificate.Infrastructure.Persistence.EntityTypeConfigurations;
+namespace CertificateManager.Infrastructure.Persistence.EntityTypeConfigurations;
 
 public class UserConfiguration : IEntityTypeConfiguration<User>
 {

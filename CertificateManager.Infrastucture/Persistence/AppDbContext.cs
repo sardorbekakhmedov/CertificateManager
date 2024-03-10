@@ -1,8 +1,8 @@
-﻿using Certificate.Application.Abstractions.Interfaces;
+﻿using CertificateManager.Application.Abstractions.Interfaces;
 using CertificateManager.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Certificate.Infrastructure.Persistence;
+namespace CertificateManager.Infrastructure.Persistence;
 
 public class AppDbContext : DbContext, IAppDbContext
 {

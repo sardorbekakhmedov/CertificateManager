@@ -1,9 +1,9 @@
 ﻿using System.Security.Claims;
-using Certificate.Application.Abstractions.Interfaces;
-using Certificate.Application.Exceptions;
+using CertificateManager.Application.Abstractions.Interfaces;
+using CertificateManager.Application.Exceptions;
 using Microsoft.AspNetCore.Http;
 
-namespace Certificate.Infrastructure.Services;
+namespace CertificateManager.Infrastructure.Services;
 
 public class CurrentUser : ICurrentUser
 {

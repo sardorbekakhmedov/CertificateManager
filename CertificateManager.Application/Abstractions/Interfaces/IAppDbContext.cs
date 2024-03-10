@@ -1,7 +1,7 @@
 ﻿using CertificateManager.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Certificate.Application.Abstractions.Interfaces;
+namespace CertificateManager.Application.Abstractions.Interfaces;
 
 public interface IAppDbContext
 {

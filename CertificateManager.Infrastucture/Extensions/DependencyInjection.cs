@@ -1,12 +1,12 @@
-﻿using Certificate.Application.Abstractions.Interfaces;
-using Certificate.Application.Abstractions.Interfaces.RepositoryServices;
-using Certificate.Infrastructure.Persistence;
-using Certificate.Infrastructure.Services.RepositoryServices;
+﻿using CertificateManager.Application.Abstractions.Interfaces;
+using CertificateManager.Application.Abstractions.Interfaces.RepositoryServices;
+using CertificateManager.Infrastructure.Persistence;
+using CertificateManager.Infrastructure.Services.RepositoryServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Certificate.Infrastructure.Extensions;
+namespace CertificateManager.Infrastructure.Extensions;
 
 public static class DependencyInjection
 {

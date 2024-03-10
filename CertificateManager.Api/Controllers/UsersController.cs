@@ -1,7 +1,7 @@
-﻿using Certificate.Application.Abstractions.Interfaces;
-using Certificate.Application.Abstractions.Interfaces.RepositoryServices;
-using Certificate.Application.DataTransferObjects.UserDTOs;
-using Certificate.Application.SortFilters.FilterEntities;
+﻿using CertificateManager.Application.Abstractions.Interfaces;
+using CertificateManager.Application.Abstractions.Interfaces.RepositoryServices;
+using CertificateManager.Application.DataTransferObjects.UserDTOs;
+using CertificateManager.Application.SortFilters.FilterEntities;
 using CertificateManager.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +22,6 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("create")]
-    [Authorize(Policy = nameof(EUserRoles.SuperUser))]
     public async Task<IActionResult> Create(UserCreateDto dto)
     {
         if (ModelState.IsValid == false)

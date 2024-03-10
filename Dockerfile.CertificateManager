@@ -15,8 +15,8 @@ COPY ["CertificateManager.Domain/CertificateManager.Domain.csproj", "Certificate
 COPY ["CertificateManager.Infrastucture/CertificateManager.Infrastructure.csproj", "CertificateManager.Infrastucture/"]
 RUN dotnet restore "./CertificateManager.Api/CertificateManager.Api.csproj"
 COPY . .
-COPY CertificateManager.Api/PdfServices/arial.ttf /app/PdfServices/
-COPY CertificateManager.Api/PdfServices/backimage.jpg /app/PdfServices/
+COPY CertificateManager.Application/Services/PdfServices/arial.ttf /app/PdfServices/
+COPY CertificateManager.Application/Services/PdfServices/backimage.jpg /app/PdfServices/
 WORKDIR "/src/CertificateManager.Api"
 RUN dotnet build "./CertificateManager.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
@@ -27,6 +27,6 @@ RUN dotnet publish "./CertificateManager.Api.csproj" -c $BUILD_CONFIGURATION -o 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-COPY CertificateManager.Api/PdfServices/arial.ttf /app/PdfServices/
-COPY CertificateManager.Api/PdfServices/backimage.jpg /app/PdfServices/
+COPY CertificateManager.Application/Services/PdfServices/arial.ttf /app/PdfServices/
+COPY CertificateManager.Application/Services/PdfServices/backimage.jpg /app/PdfServices/
 ENTRYPOINT ["dotnet", "CertificateManager.Api.dll"]

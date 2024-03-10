@@ -1,15 +1,16 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using CertificateManager.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Text;
-using Certificate.Application.Abstractions.Interfaces;
-using Certificate.Application.Exceptions;
+using CertificateManager.Application.Abstractions.Interfaces;
+using CertificateManager.Application.Exceptions;
+using CertificateManager.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Extensions;
 
-namespace Certificate.Application.Services.TokenServices;
+namespace CertificateManager.Application.Services.TokenServices;
 
 public class JwtBearerService : ITokenService
 {
@@ -40,6 +41,7 @@ public class JwtBearerService : ITokenService
             UserId = user.Id, 
             Username = user.Username,
             ExpiresInMinutes = tokenExpiryTime,
+            UserRole = user.UserRole.GetDisplayName(),
             Token = token
         };
     }
@@ -48,9 +50,9 @@ public class JwtBearerService : ITokenService
     {
         var claims = new List<Claim>()
         {
-            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(ClaimTypes.Name, user.Username),
-            new(ClaimTypes.Role, user.UserRole.ToString()),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Role,user.UserRole.GetDisplayName()),
         };
 
         var signingKey = Encoding.UTF8.GetBytes(_options.SigningKey);

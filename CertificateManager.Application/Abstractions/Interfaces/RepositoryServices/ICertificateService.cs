@@ -1,4 +1,4 @@
-﻿namespace Certificate.Application.Abstractions.Interfaces.RepositoryServices;
+﻿namespace CertificateManager.Application.Abstractions.Interfaces.RepositoryServices;
 
 public interface ICertificateService
 {

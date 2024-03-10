@@ -1,7 +1,7 @@
-﻿using Certificate.Application.Abstractions.Interfaces;
+﻿using CertificateManager.Application.Abstractions.Interfaces;
 using Microsoft.AspNetCore.Http;
 
-namespace Certificate.Application.SortFilters;
+namespace CertificateManager.Application.SortFilters;
 
 public class HttpContextHelper : IHttpContextHelper
 {

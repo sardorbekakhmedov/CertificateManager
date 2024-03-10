@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
-using Certificate.Application.Abstractions.Interfaces;
-using Certificate.Application.Abstractions.Interfaces.RepositoryServices;
-using Certificate.Application.DataTransferObjects.UserDTOs;
-using Certificate.Application.Exceptions;
-using Certificate.Application.Extensions;
-using Certificate.Application.Services.TokenServices;
-using Certificate.Application.SortFilters.FilterEntities;
+using CertificateManager.Application.Abstractions.Interfaces;
+using CertificateManager.Application.Abstractions.Interfaces.RepositoryServices;
+using CertificateManager.Application.DataTransferObjects.UserDTOs;
+using CertificateManager.Application.Exceptions;
+using CertificateManager.Application.Extensions;
+using CertificateManager.Application.Services.TokenServices;
+using CertificateManager.Application.SortFilters.FilterEntities;
 using CertificateManager.Domain.Entities;
 using CertificateManager.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Certificate.Infrastructure.Services.RepositoryServices;
+namespace CertificateManager.Infrastructure.Services.RepositoryServices;
 
 public class UserService : IUserService
 {

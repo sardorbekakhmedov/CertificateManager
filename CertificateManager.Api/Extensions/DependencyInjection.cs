@@ -1,20 +1,47 @@
-﻿using CertificateManager.Domain.Enums;
+﻿using System.Reflection;
+using CertificateManager.Domain.Enums;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
-using Certificate.Application.Extensions;
-using Certificate.Infrastructure.Extensions;
-using CertificateManager.Api.PdfServices;
+using CertificateManager.Application.DataTransferObjects.UserDTOs;
+using CertificateManager.Application.Extensions;
+using CertificateManager.Infrastructure.Extensions;
+using MassTransit;
 
 namespace CertificateManager.Api.Extensions;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddCertificateApiServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddCertificateManagerProjectServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddCertificateApiServices();
+        services.AddApplicationServices(configuration);
+        services.AddInfrastructureServices(configuration);
+
+        return services;
+    }
+
+    public static IServiceCollection AddCertificateApiServices(this IServiceCollection services)
     {
         services.AddRouting(options => options.LowercaseUrls = true);
 
-        services.AddApplicationServices(configuration);
-        services.AddInfrastructureServices(configuration);
+        services.AddMassTransit(c =>
+        {
+            //var entryAssembly = Assembly.GetEntryAssembly();
+            //c.AddConsumers(entryAssembly);
+
+            c.UsingRabbitMq(
+                (context, cfg) =>
+                {
+                    //cfg.Publish<UserUpdateListMessage> (d =>
+                    //{
+                    //    d.Durable = true;
+                    //    d.ExchangeType = "topic";
+                    //});
+
+                    cfg.ConfigureEndpoints(context);
+                }
+            );
+        });
 
         services
             .AddControllers()
@@ -24,8 +51,6 @@ public static class DependencyInjection
                 options.JsonSerializerOptions.WriteIndented = true;
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
-
-        services.AddScoped<DocumentCreator>();
 
         services.AddHttpContextAccessor();
 

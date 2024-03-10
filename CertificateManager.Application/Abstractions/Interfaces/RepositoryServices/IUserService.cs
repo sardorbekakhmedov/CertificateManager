@@ -1,9 +1,9 @@
-﻿using Certificate.Application.DataTransferObjects.UserDTOs;
-using Certificate.Application.Services.TokenServices;
-using Certificate.Application.SortFilters.FilterEntities;
+﻿using CertificateManager.Application.DataTransferObjects.UserDTOs;
+using CertificateManager.Application.Services.TokenServices;
+using CertificateManager.Application.SortFilters.FilterEntities;
 using CertificateManager.Domain.Entities;
 
-namespace Certificate.Application.Abstractions.Interfaces.RepositoryServices;
+namespace CertificateManager.Application.Abstractions.Interfaces.RepositoryServices;
 
 public interface IUserService
 {

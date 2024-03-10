@@ -1,4 +1,4 @@
-﻿namespace Certificate.Application.SortFilters;
+﻿namespace CertificateManager.Application.SortFilters;
 
 public class PaginationParams
 {

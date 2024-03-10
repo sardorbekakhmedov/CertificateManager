@@ -1,7 +1,7 @@
-﻿using Certificate.Application.Services.TokenServices;
+﻿using CertificateManager.Application.Services.TokenServices;
 using CertificateManager.Domain.Entities;
 
-namespace Certificate.Application.Abstractions.Interfaces;
+namespace CertificateManager.Application.Abstractions.Interfaces;
 
 public interface ITokenService
 {

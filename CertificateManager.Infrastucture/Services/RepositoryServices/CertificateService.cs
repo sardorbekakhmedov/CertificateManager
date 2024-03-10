@@ -1,6 +1,6 @@
-﻿using Certificate.Application.Abstractions.Interfaces.RepositoryServices;
+﻿using CertificateManager.Application.Abstractions.Interfaces.RepositoryServices;
 
-namespace Certificate.Infrastructure.Services.RepositoryServices;
+namespace CertificateManager.Infrastructure.Services.RepositoryServices;
 
 public class CertificateService : ICertificateService
 {

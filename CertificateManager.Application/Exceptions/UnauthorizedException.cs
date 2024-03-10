@@ -1,4 +1,4 @@
-﻿namespace Certificate.Application.Exceptions;
+﻿namespace CertificateManager.Application.Exceptions;
 
 public class UnauthorizedException : Exception
 {

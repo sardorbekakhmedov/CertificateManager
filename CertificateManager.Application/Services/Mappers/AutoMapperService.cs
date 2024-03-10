@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Certificate.Application.DataTransferObjects.CertificateDTOs;
-using Certificate.Application.DataTransferObjects.UserDTOs;
+using CertificateManager.Application.DataTransferObjects.CertificateDTOs;
+using CertificateManager.Application.DataTransferObjects.UserDTOs;
 using CertificateManager.Domain.Entities;
 
-namespace Certificate.Application.Services.Mappers;
+namespace CertificateManager.Application.Services.Mappers;
 
 public class AutoMapperService : Profile
 {
@@ -17,8 +17,8 @@ public class AutoMapperService : Profile
 
 
         #region Certificate
-        CreateMap<CertificateCreateDto, CertificateManager.Domain.Entities.Certificate>().ReverseMap();
-        CreateMap<CertificateManager.Domain.Entities.Certificate, CertificateDto>().ReverseMap();
+        CreateMap<CertificateCreateDto, Domain.Entities.Certificate>().ReverseMap();
+        CreateMap<Domain.Entities.Certificate, CertificateDto>().ReverseMap();
         #endregion
     }
 }

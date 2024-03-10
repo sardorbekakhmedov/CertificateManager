@@ -1,17 +1,18 @@
 ﻿using System.Text;
-using Certificate.Application.Abstractions.Interfaces;
-using Certificate.Application.Services;
-using Certificate.Application.Services.DefaultSeedData;
-using Certificate.Application.Services.Mappers;
-using Certificate.Application.Services.TokenServices;
-using Certificate.Application.SortFilters;
+using CertificateManager.Application.Abstractions.Interfaces;
+using CertificateManager.Application.Services;
+using CertificateManager.Application.Services.DefaultSeedData;
+using CertificateManager.Application.Services.Mappers;
+using CertificateManager.Application.Services.PdfServices;
+using CertificateManager.Application.Services.TokenServices;
+using CertificateManager.Application.SortFilters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
-namespace Certificate.Application.Extensions;
+namespace CertificateManager.Application.Extensions;
 
 public static class DependencyInjection
 {
@@ -26,6 +27,7 @@ public static class DependencyInjection
         services.AddScoped<ICurrentUser, CurrentUser>();
         services.AddScoped<IHttpContextHelper, HttpContextHelper>();
         services.AddScoped<IDefaultUserSeedData, DefaultUserSeedData>();
+        services.AddScoped<IPdfCreatorService, PdfCreatorService>();
 
         services.AddHttpContextAccessor();
 

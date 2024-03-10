@@ -1,6 +1,6 @@
-﻿using Certificate.Application.Abstractions.Interfaces;
+﻿using CertificateManager.Application.Abstractions.Interfaces;
+using CertificateManager.Application.Services.TokenServices;
 using Microsoft.AspNetCore.Mvc;
-using Certificate.Application.Services.TokenServices;
 
 namespace CertificateManager.Api.Controllers;
 

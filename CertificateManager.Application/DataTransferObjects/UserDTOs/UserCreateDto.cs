@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Certificate.Application.DataTransferObjects.UserDTOs;
+namespace CertificateManager.Application.DataTransferObjects.UserDTOs;
 
 public class UserCreateDto
 {

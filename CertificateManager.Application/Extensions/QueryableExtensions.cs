@@ -1,9 +1,9 @@
-﻿using Certificate.Application.Abstractions.Interfaces;
-using Certificate.Application.SortFilters;
+﻿using CertificateManager.Application.Abstractions.Interfaces;
+using CertificateManager.Application.SortFilters;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
-namespace Certificate.Application.Extensions;
+namespace CertificateManager.Application.Extensions;
 
 public static class QueryableExtensions
 {

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Certificate.Application.Services.TokenServices;
+namespace CertificateManager.Application.Services.TokenServices;
 
 public class TokenResponse
 {
@@ -12,6 +12,9 @@ public class TokenResponse
 
     [JsonPropertyName("token_expiry_time_in_minutes")]
     public required double ExpiresInMinutes { get; set; }
+
+    [JsonPropertyName("user-role")]
+    public required string UserRole { get; set; }
     
     [JsonPropertyName("token")]
     public required string Token { get; set; }
