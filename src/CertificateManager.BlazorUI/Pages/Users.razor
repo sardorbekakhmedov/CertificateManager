@@ -106,7 +106,7 @@ else
 
             token = token.Replace("\"", "");
 
-            LoadDataWithLongPoling();
+            LoadDataWithLongPolling();
         }
         else
         {
@@ -115,7 +115,7 @@ else
         }
     }
 
-    private async Task LoadDataWithLongPoling()
+    private async Task LoadDataWithLongPolling()
     {
         while (true)
         {
@@ -151,7 +151,7 @@ else
     private async Task ConnectToSignalRHubAsync()
     {
         _hubConnection = new HubConnectionBuilder()
-            .WithUrl("http://localhost:8080//custom-hub")
+            .WithUrl("http://certificate_manager:8080/custom-hub")
             .Build();
 
         _hubConnection.On<string>("message", (msg) =>

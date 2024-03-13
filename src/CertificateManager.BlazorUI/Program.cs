@@ -6,7 +6,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped(sp => new HttpClient
 {
-    BaseAddress = new Uri("http://localhost:8080")
+    BaseAddress = new Uri("http://certificate_manager:8080")
 });
 
 builder.Services.AddSignalR();
