@@ -9,7 +9,7 @@ services:
       context: .
       dockerfile: Dockerfile.CertificateManager
     ports:
-      - '8080:80'
+      - '8080:8080'
     environment:
       ASPNETCORE_ENVIRONMENT: Production
     depends_on:
@@ -26,8 +26,7 @@ services:
       context: .
       dockerfile: Dockerfile.CertificateManager.BlazorUI
     ports:
-      - '8081:80'
-      - '444:443'
+      - '5277:80'
     environment:
       ASPNETCORE_ENVIRONMENT: Production
     networks:

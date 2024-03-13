@@ -8,6 +8,8 @@ builder.AddSerilogConfiguration();
 
 builder.Services.AddCertificateManagerProjectServices(builder.Configuration);
 
+builder.Services.AddCors();
+
 var app = builder.Build();
 
 app.UseSwagger();
@@ -19,10 +21,19 @@ app.AutoMigrateAppDbContext();
 // Create a user with the administrator role
 app.CreateDefaultUserSeedData();
 
+
 app.UseCors(option =>
     option.AllowAnyHeader()
         .AllowAnyMethod()
         .AllowAnyOrigin());
+
+/*app.UseCors(options =>
+{
+    options.WithOrigins("http://localhost:5078")
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+});*/
+
 
 app.UseHttpsRedirection();
 

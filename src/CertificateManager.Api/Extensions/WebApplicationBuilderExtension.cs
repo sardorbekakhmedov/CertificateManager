@@ -27,7 +27,7 @@ public static class WebApplicationBuilderExtension
         var directory = Path.GetDirectoryName(logFilePath);
         var fileName = Path.GetFileName(logFilePath);
 
-        if (directory is null) return;
+        if (string.IsNullOrWhiteSpace(directory)) return;
 
         var logFiles = Directory.GetFiles(directory, fileName + "*")
             .OrderBy(f => new FileInfo(f).LastWriteTime)
@@ -44,4 +44,5 @@ public static class WebApplicationBuilderExtension
             Log.Error(ex, "Error when deleting old log file: {fileName}", logFiles.First());
         }
     }
+
 }
