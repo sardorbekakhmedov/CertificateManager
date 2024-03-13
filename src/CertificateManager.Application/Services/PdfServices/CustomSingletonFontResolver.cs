@@ -17,15 +17,13 @@ public class CustomSingletonFontResolver : IFontResolver
     public byte[] GetFont(string faceName)
     {
         // When you run without Docker
-        var projectPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
+        /* var projectPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         if (projectPath is null)
             throw new FileNotFoundException($"Font file not found: {projectPath} arial.ttf");
+        var fontFilePath = Path.Combine(projectPath, "arial.ttf");*/
 
-        var fontFilePath = Path.Combine(projectPath, "arial.ttf");
-
-        //// When you work with Docker
-        // var fontFilePath = "/app/PdfServices/arial.ttf";
+        // When you work with Docker
+        var fontFilePath = Path.Combine(Environment.CurrentDirectory, "Fonts", "arial.ttf");
 
         if (File.Exists(fontFilePath))
         {

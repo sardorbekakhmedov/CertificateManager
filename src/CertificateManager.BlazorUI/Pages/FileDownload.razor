@@ -1,16 +1,14 @@
 ﻿@page "/download-certificate/{certificateId}"
 @* @page "/file-download" *@
 @inject HttpClient HttpClient
-@inject IJSRuntime JSRuntime
+@inject IJSRuntime JsRuntime
 @inject NavigationManager NavigationManager
-
 
 <h3>Download Certificate</h3>
 
-
-@if (fileBytes != null)
+@if (_fileBytes != null)
 {
-    <button class="btn btn-primary" @onclick="DownloadFile">Download Certificate</button>
+    <button class="btn btn-success" @onclick="DownloadFile">Download Certificate</button>
 }
 else
 {
@@ -26,8 +24,8 @@ else
     public string certificateId { get; set; }
     private Guid _certificateId;
 
-    private byte[]? fileBytes;
-    private string fileName;
+    private byte[]? _fileBytes;
+    private string? _fileName;
 
     protected override async Task OnInitializedAsync()
     {
@@ -38,8 +36,8 @@ else
             response.EnsureSuccessStatusCode();
 
             var fileStream = await response.Content.ReadAsStreamAsync();
-            fileBytes = await response.Content.ReadAsByteArrayAsync();
-            fileName = "Certificate.pdf";
+            _fileBytes = await response.Content.ReadAsByteArrayAsync();
+            _fileName = "Certificate.pdf";
 
             StateHasChanged();
         }
@@ -51,6 +49,6 @@ else
 
     private async Task DownloadFile()
     {
-        await JSRuntime.InvokeVoidAsync("saveAsFile", fileName, Convert.ToBase64String(fileBytes));
+        await JsRuntime.InvokeVoidAsync("saveAsFile", _fileName, Convert.ToBase64String(_fileBytes!));
     }
 }

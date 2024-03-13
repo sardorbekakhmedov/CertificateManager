@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using CertificateManager.Application.Abstractions.Interfaces;
+﻿using CertificateManager.Application.Abstractions.Interfaces;
 using CertificateManager.Application.DataTransferObjects.UserDTOs;
 using Microsoft.AspNetCore.Mvc;
 using PdfSharp.Drawing;
@@ -24,19 +23,21 @@ public class PdfCreatorService : IPdfCreatorService
         var font = new XFont("Arial", 23);
 
         ////  When you run without Docker
-        var projectPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+      /*  var projectPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
         if (projectPath != null)
         {
             var fontFilePath = Path.Combine(projectPath, "backimage.jpg");
             XImage image = XImage.FromFile(fontFilePath);
 
-            ////  When you work with Docker
-            // var fontFilePath = "/app/PdfServices/backimage.jpg";
-            // XImage image = XImage.FromFile(fontFilePath);
-
             gfx.DrawImage(image, 0, 0, page.Width, page.Height);
-        }
+        }*/
+
+        ////  When you work with Docker
+        var fontFilePath = Path.Combine(Environment.CurrentDirectory, "Fonts", "backimage.jpg"); ;
+
+        XImage image = XImage.FromFile(fontFilePath);
+        gfx.DrawImage(image, 0, 0, page.Width, page.Height);
 
         var text = "            CERTIFICATE FOR: \n\n";
 

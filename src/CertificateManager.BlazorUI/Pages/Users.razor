@@ -13,14 +13,13 @@
 
 @if (_users is not null)
 {
-    if (_message is not null)
-    {
-        <div class="notification">
-            <p>You have received a PDF file.</p>
-            <button class="btn btn-primary" @onclick="NavigateToFileDownload"> Download File</button>
-        </div>
-    }
+    <div>
+        <button class="btn btn-primary" @onclick="()=>FilterUsersAsync(true)">Show Users with Certificate</button>
+        <button class="btn btn-primary" @onclick="()=>FilterUsersAsync(false)">Show Users without Certificate</button>
+        <button class="btn btn-primary" @onclick="()=>FilterUsersAsync(null)">Show All Users</button>
+    </div>
 
+    <br />
     <table class="table table-success table-striped">
         <thead>
         <tr>
@@ -65,6 +64,7 @@ else
 
     public bool IsAuthenticated = false;
     private bool _selectAll;
+    private List<UserDto>? _usersData;
     private List<UserDto>? _users;
     private HubConnection? _hubConnection;
     private string? _message;
@@ -90,7 +90,9 @@ else
 
             HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            _users = await HttpClient.GetFromJsonAsync<List<UserDto>>("/api/users/list");
+            _usersData = await HttpClient.GetFromJsonAsync<List<UserDto>>("/api/users/list");
+
+            _users = _usersData;
 
             StateHasChanged();
         }
@@ -100,6 +102,25 @@ else
             NavigationManager.NavigateTo("/login");
         }
     }
+
+    private Task FilterUsersAsync(bool? hasCertificate)
+    {
+        if (_usersData is not null)
+        {
+            if (hasCertificate.HasValue)
+            {
+                _users = _usersData.Where(u => u.HasCertificate == hasCertificate).ToList();
+            }
+            else
+            {
+                _users = _usersData;
+            }
+        
+            StateHasChanged();
+        }
+        return Task.CompletedTask;
+    }
+
 
     // Temporarily not working !!!
     private async Task ConnectToSignalRHubAsync()
@@ -144,6 +165,8 @@ else
                 response.EnsureSuccessStatusCode();
 
                 var certificateId = await response.Content.ReadAsStringAsync();
+                
+                certificateId = certificateId.Replace("\"", "");
 
                 NavigationManager.NavigateTo($"/download-certificate/{certificateId}");
             }
