@@ -1,0 +1,22 @@
+﻿@page "/user-edit/{userId}"
+@inject NavigationManager NavigationManager
+<h1>Edit User Data</h1>
+
+<h3>Sorry, this page is temporarily down</h3>
+
+@code {
+
+    [Parameter]
+    public string userId { get; set; }
+
+    private Guid _userId;
+
+    protected override void OnInitialized()
+    {
+        if (!Guid.TryParse(userId, out _userId))
+        {
+            NavigationManager.NavigateTo("/error");
+        }
+    }
+
+}

@@ -6,4 +6,6 @@ namespace CertificateManager.Application.Abstractions.Interfaces;
 public interface IPdfCreatorService
 {
     public FileContentResult CreatePdf(List<UserUpdateDto> users);
+
+
 }

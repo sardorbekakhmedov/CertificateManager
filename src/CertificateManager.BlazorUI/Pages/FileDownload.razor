@@ -1,0 +1,56 @@
+﻿@page "/download-certificate/{certificateId}"
+@* @page "/file-download" *@
+@inject HttpClient HttpClient
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+
+<h3>Download Certificate</h3>
+
+
+@if (fileBytes != null)
+{
+    <button class="btn btn-primary" @onclick="DownloadFile">Download Certificate</button>
+}
+else
+{
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+
+
+@code {
+
+    [Parameter]
+    public string certificateId { get; set; }
+    private Guid _certificateId;
+
+    private byte[]? fileBytes;
+    private string fileName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Guid.TryParse(certificateId, out _certificateId))
+        {
+            var response = await HttpClient.GetAsync($"api/certificate/{certificateId}");
+
+            response.EnsureSuccessStatusCode();
+
+            var fileStream = await response.Content.ReadAsStreamAsync();
+            fileBytes = await response.Content.ReadAsByteArrayAsync();
+            fileName = "Certificate.pdf";
+
+            StateHasChanged();
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    private async Task DownloadFile()
+    {
+        await JSRuntime.InvokeVoidAsync("saveAsFile", fileName, Convert.ToBase64String(fileBytes));
+    }
+}

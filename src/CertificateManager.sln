@@ -20,24 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pages", "Pages", "{FFD9E0CF-0A5C-49C4-9A0D-5D5332C79255}"
-	ProjectSection(SolutionItems) = preProject
-		CertificateManager.UI\Models\CertificateDTOs\CertificateCreateDto.cs = CertificateManager.UI\Models\CertificateDTOs\CertificateCreateDto.cs
-		CertificateManager.UI\Models\CertificateDTOs\CertificateDto.cs = CertificateManager.UI\Models\CertificateDTOs\CertificateDto.cs
-		CertificateManager.UI\Models\Enums\EUserRoles.cs = CertificateManager.UI\Models\Enums\EUserRoles.cs
-		CertificateManager.UI\Components\Pages\Login.razor = CertificateManager.UI\Components\Pages\Login.razor
-		CertificateManager.UI\Components\Pages\Register.razor = CertificateManager.UI\Components\Pages\Register.razor
-		CertificateManager.UI\Models\TokenModels\TokenRequest.cs = CertificateManager.UI\Models\TokenModels\TokenRequest.cs
-		CertificateManager.UI\Models\TokenModels\TokenResponse.cs = CertificateManager.UI\Models\TokenModels\TokenResponse.cs
-		CertificateManager.UI\Models\UserDTOs\UserCreateDto.cs = CertificateManager.UI\Models\UserDTOs\UserCreateDto.cs
-		CertificateManager.UI\Models\UserDTOs\UserDto.cs = CertificateManager.UI\Models\UserDTOs\UserDto.cs
-		CertificateManager.UI\Components\Pages\Users.razor = CertificateManager.UI\Components\Pages\Users.razor
-		CertificateManager.UI\Models\UserDTOs\UserUpdateDto.cs = CertificateManager.UI\Models\UserDTOs\UserUpdateDto.cs
-	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CertificateManager.UI", "CerftificateManager.UI\CertificateManager.UI.csproj", "{EC57265A-6399-418C-AB06-5C9BDDE3D5D6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreaterPdf.Api", "CreaterPdf.Api\CreaterPdf.Api.csproj", "{809A07ED-A479-48E9-B474-0A0BC22F531C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CertificateManager.BlazorUI", "CertificateManager.BlazorUI\CertificateManager.BlazorUI.csproj", "{7B420730-3724-4EF3-BA43-724AE1D55704}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,14 +44,10 @@ Global
 		{91069E9E-FB56-4024-B119-3D597208D0D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91069E9E-FB56-4024-B119-3D597208D0D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91069E9E-FB56-4024-B119-3D597208D0D7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EC57265A-6399-418C-AB06-5C9BDDE3D5D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EC57265A-6399-418C-AB06-5C9BDDE3D5D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EC57265A-6399-418C-AB06-5C9BDDE3D5D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EC57265A-6399-418C-AB06-5C9BDDE3D5D6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{809A07ED-A479-48E9-B474-0A0BC22F531C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{809A07ED-A479-48E9-B474-0A0BC22F531C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{809A07ED-A479-48E9-B474-0A0BC22F531C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{809A07ED-A479-48E9-B474-0A0BC22F531C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B420730-3724-4EF3-BA43-724AE1D55704}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B420730-3724-4EF3-BA43-724AE1D55704}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B420730-3724-4EF3-BA43-724AE1D55704}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B420730-3724-4EF3-BA43-724AE1D55704}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,8 +57,7 @@ Global
 		{65701D09-B048-4781-B22A-FFF3548DDCBF} = {B6FDF29A-3383-4095-AF0A-9E1E64A396F3}
 		{7F7E7B95-1B18-4AE2-9D6F-19AFCD147DFE} = {B6FDF29A-3383-4095-AF0A-9E1E64A396F3}
 		{91069E9E-FB56-4024-B119-3D597208D0D7} = {B6FDF29A-3383-4095-AF0A-9E1E64A396F3}
-		{EC57265A-6399-418C-AB06-5C9BDDE3D5D6} = {735B0786-7EA5-4ABF-B3D5-724F2DEEA634}
-		{809A07ED-A479-48E9-B474-0A0BC22F531C} = {B6FDF29A-3383-4095-AF0A-9E1E64A396F3}
+		{7B420730-3724-4EF3-BA43-724AE1D55704} = {735B0786-7EA5-4ABF-B3D5-724F2DEEA634}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5B023AD4-2294-48C3-ACD4-42873EB93D51}

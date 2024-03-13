@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using CertificateManager.Application.Abstractions.Interfaces;
-using CertificateManager.Application.Exceptions;
 using Microsoft.AspNetCore.Http;
 
 namespace CertificateManager.Application.Services;
@@ -16,22 +15,18 @@ public class CurrentUser : ICurrentUser
 
     private HttpContext? Context => _contextAccessor.HttpContext;
 
-    public string Username
+    public string? Username
     {
         get
         {
             var userName = Context?.User.FindFirst(ClaimTypes.Name)?.Value;
 
-            if (userName is not null)
-            {
-                return userName;
-            }
-
-            throw new UnauthorizedException("Username is not available. Authentication Failed."); ;
+            return userName ?? null;
+            // throw new UnauthorizedException("Username is not available. Authentication Failed."); ;
         }
     }
 
-    public Guid UserId
+    public Guid? UserId
     {
         get
         {
@@ -41,8 +36,12 @@ public class CurrentUser : ICurrentUser
             {
                 return userId;
             }
+            else
+            {
+                return null;
+            }
 
-            throw new UnauthorizedException("User ID is not available. Authentication Failed."); ;
+            // throw new UnauthorizedException("User ID is not available. Authentication Failed."); ;
         }
     }
 }

@@ -12,8 +12,9 @@ public class DefaultUserSeedData : IDefaultUserSeedData
     {
         using var scope = serviceProvider.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
-         
-        var defaultUserId = Guid.Parse("11111111-2222-3333-4444-555555555555");
+
+        var defaultUserId = StaticFields.AdminId;
+
         var password = "asd123";
 
         if (!dbContext.Users.Any())

@@ -1,15 +1,12 @@
-﻿using System.Text;
-using CertificateManager.Application.Abstractions.Interfaces;
+﻿using CertificateManager.Application.Abstractions.Interfaces;
 using CertificateManager.Application.Services;
 using CertificateManager.Application.Services.DefaultSeedData;
 using CertificateManager.Application.Services.Mappers;
 using CertificateManager.Application.Services.PdfServices;
 using CertificateManager.Application.Services.TokenServices;
 using CertificateManager.Application.SortFilters;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace CertificateManager.Application.Extensions;
@@ -19,7 +16,6 @@ public static class DependencyInjection
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSwaggerConfiguration();
-        services.AddJwtValidationService(configuration);
 
         services.AddAutoMapper(typeof(AutoMapperService));
 
@@ -32,41 +28,6 @@ public static class DependencyInjection
         services.AddHttpContextAccessor();
 
         return services;
-    }
-
-    public static void AddJwtValidationService(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.Configure<JwtBearerOption>(configuration.GetSection("JwtBearerOption"));
-
-        services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                var configString = configuration["JwtBearerOption:SigningKey"];
-                var validIssuer = configuration["JwtBearerOption:ValidIssuer"];
-                var validAudience = configuration["JwtBearerOption:ValidAudience"];
-
-                if (configString is null || validIssuer is null || validAudience is null)
-                    throw new ArgumentNullException(nameof(configString));
-
-                var signingKey = Encoding.UTF8.GetBytes(configString);
-
-                options.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    ValidIssuer = validIssuer,
-                    ValidAudience = validAudience,
-                    IssuerSigningKey = new SymmetricSecurityKey(signingKey),
-                    ClockSkew = TimeSpan.Zero,
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidateLifetime = true
-                };
-            });
     }
 
     public static void AddSwaggerConfiguration(this IServiceCollection services)

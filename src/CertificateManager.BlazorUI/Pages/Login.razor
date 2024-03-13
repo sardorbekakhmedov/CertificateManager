@@ -1,0 +1,71 @@
+﻿@page "/login"
+@using CertificateManager.BlazorUI.Models.Tokens
+@using Blazored.LocalStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorage
+
+<PageTitle>Login</PageTitle>
+
+<h1 class="text-center mt-4"> Login </h1>
+
+<div Style="display:flex; justify-content:center; align-items:center; height:50vh" >
+
+    <EditForm class="w-25"  Model="@_tokenRequest" OnValidSubmit="HandleValidSubmit" id="loginForm" FormName="loginForm">
+        <DataAnnotationsValidator />
+
+        <field>
+            <label>Username:</label>
+            <InputText @bind-Value="_tokenRequest.Username" Class="form-control" />
+        </field>
+
+        <field>
+            <label>Password:</label>
+            <InputText @bind-Value="_tokenRequest.Password" type="password" Class="form-control" />
+        </field>
+        
+        <br />
+
+        <div Style="display:flex;   gap:10px">
+            <field>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </field>
+        </div>
+
+    </EditForm>
+
+</div>
+
+
+@code {
+    private TokenRequest _tokenRequest = new ();
+    private TokenResponse? _tokenResponse;
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            var response = await HttpClient.PostAsJsonAsync("/api/tokens/login", _tokenRequest);
+            response.EnsureSuccessStatusCode();
+
+            _tokenResponse = await response.Content.ReadFromJsonAsync<TokenResponse>();
+
+            if (_tokenResponse is not null)
+            {
+                await LocalStorage.SetItemAsync("username", _tokenResponse.Username);
+                await LocalStorage.SetItemAsync("token", _tokenResponse.Token);
+                await LocalStorage.SetItemAsync("userRole", _tokenResponse.UserRole);
+
+             //   NavigationManager.NavigateTo("/");
+
+                NavigationManager.NavigateTo("/", forceLoad: true); // Перезагрузка текущей страницы
+
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+}

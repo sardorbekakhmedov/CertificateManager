@@ -10,6 +10,7 @@ namespace CertificateManager.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;
@@ -22,6 +23,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("create")]
+    [Authorize(Policy = nameof(EUserRoles.SuperUser))]
     public async Task<IActionResult> Create(UserCreateDto dto)
     {
         if (ModelState.IsValid == false)
@@ -68,12 +70,15 @@ public class UsersController : ControllerBase
         if (ModelState.IsValid == false)
             return BadRequest(ModelState);
 
-        return Ok(await _userService.GetByIdAsync(_currentUser.UserId));
+        if (_currentUser.UserId is null)
+            return BadRequest(ModelState);
+        
+        return Ok(await _userService.GetByIdAsync((Guid)_currentUser.UserId));
     }
 
 
     [HttpPut("{userId:guid}")]
-    [Authorize(Policy = nameof(EUserRoles.Admin))]
+    [Authorize(Policy = nameof(EUserRoles.SuperUser))]
     public async Task<IActionResult> Update(Guid userId, UserUpdateDto dto)
     {
         if (ModelState.IsValid == false)

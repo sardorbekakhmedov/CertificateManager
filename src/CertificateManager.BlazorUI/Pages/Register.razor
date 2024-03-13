@@ -1,0 +1,118 @@
+﻿@page "/register"
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorage
+@using CertificateManager.BlazorUI.Models.UserDTOs
+@using CertificateManager.BlazorUI.Models.Enums
+@using Blazored.LocalStorage
+
+<PageTitle>Register</PageTitle>
+
+@{
+    if (_userIsAdmin)
+    {
+        <h1 class="text-center mt-4"> Register </h1>
+
+        <div Style="display:flex; justify-content:center; align-items:center; height:70vh" >
+
+            <EditForm class="w-25" Model="@_userCreateDto" OnValidSubmit="HandleValidSubmit" id="registerForm" FormName="registerForm">
+                <DataAnnotationsValidator />
+        
+                <field>
+                    <label>Username:</label>
+                    <InputText @bind-Value="_userCreateDto.Username" Class="form-control" />
+                </field>
+        
+                <field>
+                    <label>Age:</label>
+                    <InputNumber @bind-Value="_userCreateDto.Age" Class="form-control"  />
+                </field>
+        
+                <field>
+                    <label>Email:</label>
+                    <InputText @bind-Value="_userCreateDto.Email" Class="form-control"  />
+                </field>
+
+                <field>
+                    <label>User role:</label>
+                    <select @bind="_userCreateDto.UserRole" class="form-control">
+                        @foreach (var role in Enum.GetValues(typeof(EUserRoles)))
+                        {
+                            <option value="@((int)role)">@role</option>
+                        }
+                    </select>
+                </field>
+
+                <field>
+                    <label>Password:</label>
+                    <InputText @bind-Value="_userCreateDto.Password" type="password" Class="form-control" />
+                </field>
+        
+                <field>
+                    <label>Password Confirm:</label>
+                    <InputText @bind-Value="_userCreateDto.PasswordConfirm" type="password" Class="form-control" />
+                </field>
+
+                <br />
+
+                <fiv Style="display:flex;   gap:10px">
+                    <field>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </field>
+
+                    <fiv>
+                        <a class="btn btn-primary" href="/login">Login</a>
+                    </fiv>
+                </fiv>
+
+            </EditForm>
+        </div>
+
+    }
+    else
+    {
+        <h1> This page is for administration only </h1>
+    }
+}
+
+
+@code {
+    private readonly UserCreateDto _userCreateDto = new();
+    private bool _userIsAdmin = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userRole = await LocalStorage.GetItemAsStringAsync("userRole");
+
+        if (userRole is not null && userRole == "\"Admin\"")
+        {
+            _userIsAdmin = true;
+
+            StateHasChanged();
+        }
+        else
+        {
+            await Task.Delay(2000);
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+           // Send POST request to the API
+            var response = await HttpClient.PostAsJsonAsync("/api/users/create", _userCreateDto);
+            response.EnsureSuccessStatusCode();
+
+           // Redirect to another page
+            NavigationManager.NavigateTo("/users");
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+}

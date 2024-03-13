@@ -1,0 +1,60 @@
+﻿@using Blazored.LocalStorage
+@inherits LayoutComponentBase
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
+
+<PageTitle>CertificateManager.BlazorUI</PageTitle>
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            @{
+                if (UserName is not null)
+                {
+                    <div>
+                        <a class="btn btn-success" href="/profile" target="_blank">Username: @UserName</a>
+                        <button class="btn btn-danger" @onclick="Logout">Logout</button>
+                    </div>
+                }
+                else
+                {
+                    <a class="btn btn-primary" href="/login" target="_blank">Login</a>
+                }
+            }
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code {
+
+    public string? UserName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var username = await LocalStorage.GetItemAsStringAsync("username");
+
+        if (username is not null)
+        {
+            username = username.Replace("\"", "");
+            UserName = username;
+
+            StateHasChanged();
+        }
+    }
+
+    private async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("username");
+        await LocalStorage.RemoveItemAsync("token");
+        await LocalStorage.RemoveItemAsync("userRole");
+        NavigationManager.NavigateTo("/",  forceLoad: true);
+    }
+}

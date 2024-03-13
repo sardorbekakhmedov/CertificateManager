@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -16,8 +16,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\arial.ttf" />
+    <Content Remove="wwwroot\backimage.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="MassTransit" Version="8.1.3" />
 	  <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
 	  <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.3" />
+	  <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.16" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.2" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.2">
 	    <PrivateAssets>all</PrivateAssets>
@@ -30,6 +37,11 @@
   <ItemGroup>
     <ProjectReference Include="..\CertificateManager.Application\CertificateManager.Application.csproj" />
     <ProjectReference Include="..\CertificateManager.Infrastucture\CertificateManager.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Fonts\arial.ttf" />
+    <None Include="wwwroot\Fonts\backimage.jpg" />
   </ItemGroup>
 
 </Project>

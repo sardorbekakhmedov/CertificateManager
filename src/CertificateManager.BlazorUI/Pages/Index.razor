@@ -1,0 +1,46 @@
+﻿@page "/"
+@using Blazored.LocalStorage
+@inherits LayoutComponentBase
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
+
+<PageTitle>Index</PageTitle>
+
+@{
+    if (UserName is not null)
+    {
+        <h1>Hello, world!</h1>
+
+        <p> Welcome to your new app.</p>
+
+        <SurveyPrompt Title="How is Blazor working for you?" />
+    }
+    else
+    {
+        <h1>Please login</h1>
+    }
+}
+
+
+@code {
+
+    public string? UserName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var username = await LocalStorage.GetItemAsStringAsync("username");
+
+        if (username is not null)
+        {
+            username = username.Replace("\"", "");
+            UserName = username;
+
+            StateHasChanged();
+        }
+        else
+        {
+            await Task.Delay(2000);
+            NavigationManager.NavigateTo("/login");
+        }
+    }
+}

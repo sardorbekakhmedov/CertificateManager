@@ -1,11 +1,14 @@
 ﻿using System.Reflection;
 using CertificateManager.Domain.Enums;
 using System.Security.Claims;
+using System.Text;
 using System.Text.Json.Serialization;
-using CertificateManager.Application.DataTransferObjects.UserDTOs;
 using CertificateManager.Application.Extensions;
+using CertificateManager.Application.Services.TokenServices;
 using CertificateManager.Infrastructure.Extensions;
 using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CertificateManager.Api.Extensions;
 
@@ -13,31 +16,28 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddCertificateManagerProjectServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddCertificateApiServices();
+        services.AddCertificateApiServices(configuration);
         services.AddApplicationServices(configuration);
         services.AddInfrastructureServices(configuration);
 
         return services;
     }
 
-    public static IServiceCollection AddCertificateApiServices(this IServiceCollection services)
+    public static IServiceCollection AddCertificateApiServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddSignalR();
+
         services.AddRouting(options => options.LowercaseUrls = true);
+
+        services.AddJwtValidationService(configuration);
 
         services.AddMassTransit(c =>
         {
-            //var entryAssembly = Assembly.GetEntryAssembly();
-            //c.AddConsumers(entryAssembly);
+            c.AddConsumers(Assembly.GetEntryAssembly());
 
             c.UsingRabbitMq(
                 (context, cfg) =>
                 {
-                    //cfg.Publish<UserUpdateListMessage> (d =>
-                    //{
-                    //    d.Durable = true;
-                    //    d.ExchangeType = "topic";
-                    //});
-
                     cfg.ConfigureEndpoints(context);
                 }
             );
@@ -60,6 +60,43 @@ public static class DependencyInjection
         services.AddRoleServices();
 
         return services;
+    }
+
+    public static void AddJwtValidationService(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<JwtBearerOption>(configuration.GetSection("JwtBearerOption"));
+
+        services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                var configString = configuration["JwtBearerOption:SigningKey"];
+                var validIssuer = configuration["JwtBearerOption:ValidIssuer"];
+                var validAudience = configuration["JwtBearerOption:ValidAudience"];
+
+                if (configString is null || validIssuer is null || validAudience is null)
+                    throw new ArgumentNullException(nameof(configString));
+
+                var signingKey = Encoding.UTF8.GetBytes(configString);
+
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidIssuer = validIssuer,
+                    ValidAudience = validAudience,
+                    IssuerSigningKey = new SymmetricSecurityKey(signingKey),
+                    ClockSkew = TimeSpan.Zero,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true
+                };
+            });
+
+        services.AddAuthorization();
     }
 
     public static void AddRoleServices(this IServiceCollection services)

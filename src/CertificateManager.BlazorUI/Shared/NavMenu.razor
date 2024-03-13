@@ -1,0 +1,68 @@
+﻿@using Blazored.LocalStorage
+@using CertificateManager.BlazorUI.Models.Enums
+@inject ILocalStorageService LocalStorage
+
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">CertificateManager.BlazorUI</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+
+        @if (_userIsAdmin)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="register">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Add new user
+                </NavLink>
+            </div>
+    
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="users">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Users
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="file-download">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Download file
+                </NavLink>
+            </div>
+        }
+    </nav>
+</div>
+
+@code {
+
+    private bool _collapseNavMenu = true;
+    private bool _userIsAdmin = false;
+
+    private string? NavMenuCssClass => _collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        _collapseNavMenu = !_collapseNavMenu;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userRole = await LocalStorage.GetItemAsStringAsync("userRole");
+
+        if (userRole is not null && userRole == "\"Admin\"")
+        {
+            _userIsAdmin = true;
+
+            StateHasChanged();
+        }
+    }
+}

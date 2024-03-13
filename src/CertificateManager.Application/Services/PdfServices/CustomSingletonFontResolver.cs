@@ -1,4 +1,5 @@
 ﻿using PdfSharp.Fonts;
+using System.Reflection;
 
 namespace CertificateManager.Application.Services.PdfServices;
 
@@ -15,13 +16,16 @@ public class CustomSingletonFontResolver : IFontResolver
 
     public byte[] GetFont(string faceName)
     {
-        // C:\Dev\C#\JOB_TASKS\Webase\CertificateManager\CertificateManager.Application\Services\PdfServices\arial.ttf
         // When you run without Docker
-        // var fontFilePath = @"CertificateManager.Application/Services/PdfServices/arial.ttf";
-        // var fontFilePath = @"C:\Dev\C#\JOB_TASKS\Webase\CertificateManager\CertificateManager.Application\Services\PdfServices\arial.ttf";
+        var projectPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+        if (projectPath is null)
+            throw new FileNotFoundException($"Font file not found: {projectPath} arial.ttf");
+
+        var fontFilePath = Path.Combine(projectPath, "arial.ttf");
 
         //// When you work with Docker
-        var fontFilePath = "/app/PdfServices/arial.ttf";
+        // var fontFilePath = "/app/PdfServices/arial.ttf";
 
         if (File.Exists(fontFilePath))
         {

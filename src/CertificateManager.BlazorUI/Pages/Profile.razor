@@ -1,0 +1,50 @@
+﻿@page "/profile"
+@using CertificateManager.BlazorUI.Models.UserDTOs
+@using System.Net.Http.Headers
+@using Blazored.LocalStorage
+@inject HttpClient HttpClient
+@inherits LayoutComponentBase
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
+
+<h1>Profile</h1>
+
+@if (_user != null)
+{
+    <p><strong>Username:</strong> @_user.Username</p>
+    <p><strong>Age:</strong> @_user.Age</p>
+    <p><strong>Email:</strong> @_user.Email</p>
+    <p><strong>HasCertificate:</strong> @_user.HasCertificate</p>
+    <p><strong>UserRoles:</strong> @_user.UserRoles</p>
+    <p><strong>CreatedById:</strong> @_user.CreatedById</p>
+    <p><strong>CreatedDate:</strong> @_user.CreatedDate</p>
+    <p><strong>LastModifiedById:</strong> @_user.LastModifiedById</p>
+    <p><strong>LastModifiedDate:</strong> @_user.LastModifiedDate</p>
+}
+
+@code {
+    private UserDto? _user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var token = await LocalStorage.GetItemAsStringAsync("token");
+        var username = await LocalStorage.GetItemAsStringAsync("username");
+
+        if (token is not null && username is not null)
+        {
+            token = token.Replace("\"", "");
+            username = username.Replace("\"", "");
+
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            _user = await HttpClient.GetFromJsonAsync<UserDto>($"/api/users/{username}");
+
+            StateHasChanged();
+        }
+        else
+        {
+            await Task.Delay(2000);
+            NavigationManager.NavigateTo("/login");
+        }
+    }
+}

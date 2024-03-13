@@ -1,0 +1,175 @@
+﻿@page "/users"
+@inject HttpClient HttpClient
+@inherits LayoutComponentBase
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
+
+@using CertificateManager.BlazorUI.Models.UserDTOs
+@using System.Net.Http.Headers
+@using Blazored.LocalStorage
+@using Microsoft.AspNetCore.SignalR.Client
+
+<h1 class="text-center mt-4"> Users </h1>
+
+@if (_users is not null)
+{
+    if (_message is not null)
+    {
+        <div class="notification">
+            <p>You have received a PDF file.</p>
+            <button class="btn btn-primary" @onclick="NavigateToFileDownload"> Download File</button>
+        </div>
+    }
+
+    <table class="table table-success table-striped">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Username</th>
+            <th scope="col">Age</th>
+            <th scope="col">Email</th>
+            <th scope="col">HasCertificate</th>
+            <th scope="col"> <input type="checkbox" @onclick="SelectAllUsers" /> Selected all</th>
+            <th scope="col">Edit data</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var user in _users)
+        {
+            <tr>
+                <td>@(_users.IndexOf(user) + 1)</td>
+                <td>@user.Username</td>
+                <td>@user.Age</td>
+                <td>@user.Email</td>
+                <td>@user.HasCertificate</td>
+                <td><input type="checkbox" @bind="user.Selected" /></td>
+                <td><button class="btn btn-primary" @onclick="()=>EditUser(user)">Edit</button></td>
+            </tr>
+        }
+
+        </tbody>
+    </table>
+
+    if (_users.Any(x => x.Selected))
+    {
+        <br />
+        <button class="btn btn-primary" @onclick="CreateCertificateAsync">CreateCertificate</button>
+    }
+}
+else
+{
+    <h1>Please register</h1>
+}
+
+@code {
+
+    public bool IsAuthenticated = false;
+    private bool _selectAll;
+    private List<UserDto>? _users;
+    private HubConnection? _hubConnection;
+    private string? _message;
+    public string? token;
+
+    public async Task DisposeAsync()
+    {
+        await _hubConnection.DisposeAsync();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        token = await LocalStorage.GetItemAsStringAsync("token");
+
+        if (token is not null)
+        {
+            // Temporarily not working !!!
+            // await ConnectToSignalRHubAsync();
+
+            token = token.Replace("\"", "");
+
+            IsAuthenticated = true;
+
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            _users = await HttpClient.GetFromJsonAsync<List<UserDto>>("/api/users/list");
+
+            StateHasChanged();
+        }
+        else
+        {
+            await Task.Delay(2000);
+            NavigationManager.NavigateTo("/login");
+        }
+    }
+
+    // Temporarily not working !!!
+    private async Task ConnectToSignalRHubAsync()
+    {
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl("http://localhost:8081//custom-hub")
+            .Build();
+
+        _hubConnection.On<string>("NewMessage", (msg) =>
+        {
+            _message = msg;
+
+            StateHasChanged();
+        });
+
+        await _hubConnection.StartAsync();
+    }
+        
+    private async Task CreateCertificateAsync()
+    {
+        var selectedUsers = _users?.Where(u => u.Selected).ToList();
+
+        if (selectedUsers is not null && selectedUsers.Any())
+        {
+            var users = new List<UserUpdateDto>();
+
+            foreach (var selectedUser in selectedUsers)
+            {
+                users.Add( new UserUpdateDto()
+                {
+                    Username = selectedUser.Username,
+                    Age = selectedUser.Age,
+                    Email = selectedUser.Email,
+                    UserRole = selectedUser.UserRoles
+                });
+            }
+
+            if (token is not null)
+            {
+                HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                var response = await HttpClient.PostAsJsonAsync("/api/certificate/download-pdf", users);
+                response.EnsureSuccessStatusCode();
+
+                var certificateId = await response.Content.ReadAsStringAsync();
+
+                NavigationManager.NavigateTo($"/download-certificate/{certificateId}");
+            }
+        }
+    }
+
+    private void NavigateToFileDownload()
+    {
+        NavigationManager.NavigateTo("/file-download");
+    }
+
+    private void SelectAllUsers()
+    {
+        if (_users is null) return;
+
+        _selectAll = !_selectAll;
+
+        foreach (var user in _users)
+        {
+            user.Selected = _selectAll;
+        }
+    }
+
+    private void EditUser(UserDto user)
+    {
+        NavigationManager.NavigateTo($"/user-edit/{user.Id}");
+    }
+
+}

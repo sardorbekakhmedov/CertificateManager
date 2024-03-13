@@ -1,5 +1,7 @@
 using CertificateManager.Api.MiddleWares;
 using CertificateManager.Api.Extensions;
+using CertificateManager.Api.SignalRHub;
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,10 +13,10 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 // at startup, the application will automatically record the update database command
-app.AutoMigrateAppDbContext();
+//app.AutoMigrateAppDbContext();
 
 // Create a user with the administrator role
-app.CreateDefaultUserSeedData();
+//app.CreateDefaultUserSeedData();
 
 app.UseCors(option =>
     option.AllowAnyHeader()
@@ -23,9 +25,12 @@ app.UseCors(option =>
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseCustomErrorHandlerMiddleware();
 app.MapControllers();
+
+app.MapHub<CustomHub>("/custom-hub ");
 
 app.Run();

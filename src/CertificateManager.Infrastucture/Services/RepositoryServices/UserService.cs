@@ -4,6 +4,7 @@ using CertificateManager.Application.Abstractions.Interfaces.RepositoryServices;
 using CertificateManager.Application.DataTransferObjects.UserDTOs;
 using CertificateManager.Application.Exceptions;
 using CertificateManager.Application.Extensions;
+using CertificateManager.Application.Services;
 using CertificateManager.Application.Services.TokenServices;
 using CertificateManager.Application.SortFilters.FilterEntities;
 using CertificateManager.Domain.Entities;
@@ -35,7 +36,6 @@ public class UserService : IUserService
         _currentUser = currentUser;
     }
 
-
     public async Task<Guid> CreateAsync(UserCreateDto dto)
     {
         if (await _dbContext.Users.AnyAsync(x => x.Username == dto.Username))
@@ -48,7 +48,16 @@ public class UserService : IUserService
         user.HasCertificate = false;
         user.PasswordHash = new PasswordHasher<User>().HashPassword(user, dto.Password);
         user.UserRole = EUserRoles.User;
-        user.CreatedById = _currentUser.UserId;
+
+        if (_currentUser.UserId is not null)
+        {
+            user.CreatedById = (Guid)_currentUser.UserId;
+        }
+        else
+        {
+            user.CreatedById = StaticFields.AdminId;
+        }
+ 
 
         await _dbContext.BeginTransactionAsync();
         try
@@ -65,8 +74,6 @@ public class UserService : IUserService
 
         return user.Id;
     }
-
-
 
     public async Task<TokenResponse> LoginAsync(TokenRequest request)
     {
@@ -113,8 +120,27 @@ public class UserService : IUserService
         return users.Select(user => _mapper.Map<UserDto>(user));
     }
 
+    public async Task UpdateUserCertificateAsync(Guid certificateId,  List<UserUpdateDto> dto)
+    {
+        var usernames = dto.Select(x => x.Username).ToList();
+
+        var usersToUpdate = _dbContext.Users.Where(x => usernames.Contains(x.Username));
+
+        foreach (var user in usersToUpdate)
+        {
+            user.CertificateId = certificateId;
+            user.HasCertificate = true;
+        }
+
+        await _dbContext.SaveChangesAsync();
+    }
+
+
     public async Task<User> UpdateAsync(Guid userId, UserUpdateDto dto)
     {
+        if(_currentUser.UserId is null)
+            throw new UnauthorizedException("Current user not found!,  Authentication Failed.");
+
         if (userId == Guid.Empty)
         {
             throw new ArgumentException("UserId cannot be null!.");
@@ -131,6 +157,8 @@ public class UserService : IUserService
             user.Email = dto.Email ?? user.Email;
             user.UserRole = dto.UserRole ?? user.UserRole;
 
+            user.LastModifiedById = _currentUser.UserId;
+
             _dbContext.Users.Attach(user);
             await _dbContext.SaveChangesAsync();
 
@@ -144,7 +172,6 @@ public class UserService : IUserService
             throw;
         }
     }
-
 
     public async Task DeleteAsync(Guid userId)
     {

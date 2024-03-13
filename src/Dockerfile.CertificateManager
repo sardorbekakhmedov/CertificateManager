@@ -28,5 +28,5 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 COPY CertificateManager.Application/Services/PdfServices/arial.ttf /app/PdfServices/
-COPY CertificateManager.Application/Services/PdfServices/backimage.jpg /app/PdfServices/
+COPY CertificateManager.Application/Services/PdfServices/backimage.jpg /app/PdfServices/s/
 ENTRYPOINT ["dotnet", "CertificateManager.Api.dll"]
