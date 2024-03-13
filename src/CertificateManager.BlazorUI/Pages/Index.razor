@@ -9,18 +9,17 @@
 @{
     if (UserName is not null)
     {
-        <h1>Hello, world!</h1>
+        <h1>Hello!</h1>
 
-        <p> Welcome to your new app.</p>
+        <p> <srong> Hello, welcome to our small website for the production of certificates</srong> </p>
 
-        <SurveyPrompt Title="How is Blazor working for you?" />
+        <p> @DateTime.Now.ToLongDateString() </p>
     }
     else
     {
         <h1>Please login</h1>
     }
 }
-
 
 @code {
 

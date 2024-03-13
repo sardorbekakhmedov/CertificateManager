@@ -18,6 +18,21 @@ services:
     networks:
       - certificate_network
  
+  certificate_blazor_manager:
+    image: certificate_blazor_manager
+    container_name: certificate_blazor_manager
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.CertificateManager.BlazorUI
+    ports:
+      - '8081:80'
+      - '444:443'
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+    networks:
+      - certificate_network
+ 
   certificate_db:
     image: postgres:latest
     container_name: certificate_db

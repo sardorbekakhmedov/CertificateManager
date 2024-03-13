@@ -1,5 +1,5 @@
-﻿@page "/download-certificate/{certificateId}"
-@* @page "/file-download" *@
+﻿@page "/download-certificate/{certificateId}/{token}"
+@using System.Net.Http.Headers
 @inject HttpClient HttpClient
 @inject IJSRuntime JsRuntime
 @inject NavigationManager NavigationManager
@@ -17,12 +17,15 @@ else
     </div>
 }
 
-
 @code {
 
     [Parameter]
     public string certificateId { get; set; }
     private Guid _certificateId;
+
+    [Parameter]
+    public string token { get; set; }
+    private string _token;
 
     private byte[]? _fileBytes;
     private string? _fileName;
@@ -31,6 +34,9 @@ else
     {
         if (Guid.TryParse(certificateId, out _certificateId))
         {
+            _token = token;
+
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await HttpClient.GetAsync($"api/certificate/{certificateId}");
 
             response.EnsureSuccessStatusCode();

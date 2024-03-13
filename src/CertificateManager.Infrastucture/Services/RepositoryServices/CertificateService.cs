@@ -5,6 +5,7 @@ using CertificateManager.Application.Exceptions;
 using CertificateManager.Application.Services;
 using CertificateManager.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CertificateManager.Infrastructure.Services.RepositoryServices;

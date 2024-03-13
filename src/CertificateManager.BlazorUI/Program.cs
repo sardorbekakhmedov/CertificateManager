@@ -1,11 +1,9 @@
 using Blazored.LocalStorage;
-using CertificateManager.BlazorUI.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddScoped(sp => new HttpClient
 {
     BaseAddress = new Uri("http://localhost:8080")

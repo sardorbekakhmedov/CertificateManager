@@ -27,6 +27,7 @@ public static class DependencyInjection
     {
         services.AddSignalR();
 
+       
         services.AddRouting(options => options.LowercaseUrls = true);
 
         services.AddJwtValidationService(configuration);

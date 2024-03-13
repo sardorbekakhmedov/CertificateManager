@@ -13,6 +13,27 @@
 
 @if (_users is not null)
 {
+    if(_message is not null)
+    {
+        <div class="modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Modal body text goes here.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
     <div>
         <button class="btn btn-primary" @onclick="()=>FilterUsersAsync(true)">Show Users with Certificate</button>
         <button class="btn btn-primary" @onclick="()=>FilterUsersAsync(false)">Show Users without Certificate</button>
@@ -28,7 +49,7 @@
             <th scope="col">Age</th>
             <th scope="col">Email</th>
             <th scope="col">HasCertificate</th>
-            <th scope="col"> <input type="checkbox" @onclick="SelectAllUsers" /> Selected all</th>
+                <th scope="col"> <input type="checkbox" @onclick="SelectAllUsers" /> Select all for the certificate</th>
             <th scope="col">Edit data</th>
         </tr>
         </thead>
@@ -61,8 +82,7 @@ else
 }
 
 @code {
-
-    public bool IsAuthenticated = false;
+    
     private bool _selectAll;
     private List<UserDto>? _usersData;
     private List<UserDto>? _users;
@@ -86,20 +106,26 @@ else
 
             token = token.Replace("\"", "");
 
-            IsAuthenticated = true;
-
-            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-            _usersData = await HttpClient.GetFromJsonAsync<List<UserDto>>("/api/users/list");
-
-            _users = _usersData;
-
-            StateHasChanged();
+            LoadDataWithLongPoling();
         }
         else
         {
             await Task.Delay(2000);
             NavigationManager.NavigateTo("/login");
+        }
+    }
+
+    private async Task LoadDataWithLongPoling()
+    {
+        while (true)
+        {
+            await Task.Delay(1000);
+			
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            _usersData = await HttpClient.GetFromJsonAsync<List<UserDto>>("/api/users/list");
+            _users = _usersData;
+
+            StateHasChanged();
         }
     }
 
@@ -121,15 +147,14 @@ else
         return Task.CompletedTask;
     }
 
-
     // Temporarily not working !!!
     private async Task ConnectToSignalRHubAsync()
     {
         _hubConnection = new HubConnectionBuilder()
-            .WithUrl("http://localhost:8081//custom-hub")
+            .WithUrl("http://localhost:8080//custom-hub")
             .Build();
 
-        _hubConnection.On<string>("NewMessage", (msg) =>
+        _hubConnection.On<string>("message", (msg) =>
         {
             _message = msg;
 
@@ -168,7 +193,7 @@ else
                 
                 certificateId = certificateId.Replace("\"", "");
 
-                NavigationManager.NavigateTo($"/download-certificate/{certificateId}");
+                NavigationManager.NavigateTo($"/download-certificate/{certificateId}/{token}");
             }
         }
     }

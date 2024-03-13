@@ -3,7 +3,8 @@ using CertificateManager.Application.DataTransferObjects.UserDTOs;
 using MassTransit;
 using CertificateManager.Application.Abstractions.Interfaces.RepositoryServices;
 using Microsoft.AspNetCore.Authorization;
-using CertificateManager.Application.Abstractions.Interfaces;
+using CertificateManager.Api.SignalRHub;
+using Microsoft.AspNetCore.SignalR;
 
 namespace CertificateManager.Api.Controllers;
 
@@ -12,17 +13,19 @@ namespace CertificateManager.Api.Controllers;
 [Authorize]
 public class CertificateController : ControllerBase
 {
-    private readonly IPdfCreatorService _pdfCreatorService;
-    private readonly IAppDbContext _dbContext;
-    private readonly ICertificateService _certificateService;
     private readonly IUserService _userService;
     private readonly IPublishEndpoint _publishEndpoint;
+    private readonly ICertificateService _certificateService;
+    private readonly IHubContext<CustomHub> _customHubContext;
 
-    public CertificateController(IPdfCreatorService pdfCreatorService, IAppDbContext dbContext, ICertificateService certificateService, IUserService userService, IPublishEndpoint publishEndpoint)
+    public CertificateController(
+        IUserService userService, 
+        IPublishEndpoint publishEndpoint,
+        ICertificateService certificateService,
+        IHubContext<CustomHub> customHubContext)
     {
-        _pdfCreatorService = pdfCreatorService;
-        _dbContext = dbContext;
         _certificateService = certificateService;
+        _customHubContext = customHubContext;
         _userService = userService;
         this._publishEndpoint = publishEndpoint;
     }
@@ -38,6 +41,10 @@ public class CertificateController : ControllerBase
         var (file, certificateId) = await _certificateService.GetLastCreatedCertificate();
 
         await _userService.UpdateUserCertificateAsync(certificateId, users);
+
+        // Sending an array of bytes via SignalR
+        var messageText = "You can download the ready-made certificate that you have created!";
+        await _customHubContext.Clients.All.SendAsync("message", messageText);
 
         return Ok(certificateId);
     }
@@ -74,6 +81,11 @@ public class CertificateController : ControllerBase
         var (file, certificateId) = await _certificateService.GetLastCreatedCertificate();
 
         await _userService.UpdateUserCertificateAsync(certificateId, users);
+
+        // Sending an array of bytes via SignalR
+        var messageText = "You can download the ready-made certificate that you have created!";
+        await _customHubContext.Clients.All.SendAsync("message", messageText);
+
 
         return File(file.FileContents, "application/pdf", "Certificate.pdf");
     }
